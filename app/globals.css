@@ -11,7 +11,7 @@
 
   body {
     /* Deep black background matching your wireframe aesthetic */
-    @apply bg-black text-gray-200 antialiased selection:bg-cyan-900 selection:text-cyan-100;
+    @apply bg-black text-gray-200 font-mono antialiased selection:bg-cyan-900 selection:text-cyan-100;
   }
 
   /* Customizing the default scrollbar to match the dark UI */
