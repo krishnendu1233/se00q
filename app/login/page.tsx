@@ -10,20 +10,21 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState(""); // Added success state
 
   const handleAuth = async (e: React.FormEvent, isSignUp: boolean) => {
     e.preventDefault();
     setLoading(true);
     setErrorMsg("");
+    setSuccessMsg(""); // Clear previous success messages
 
     if (isSignUp) {
-      // Create new account
       const { error } = await supabase.auth.signUp({ email, password });
       if (error) {
         setErrorMsg(error.message);
       } else {
-        // As per your wireframe, new users go straight to the setup page
-        router.push("/setup"); 
+        // Now it uses the success state
+        setSuccessMsg("Success! Please check your email for the confirmation link.");
       }
     } else {
       // Login existing user
@@ -45,9 +46,17 @@ export default function Login() {
         <h1 className="text-2xl sm:text-3xl font-bold text-cyan-400 mb-2">Welcome Back</h1>
         <p className="text-sm sm:text-base text-zinc-500 mb-6">Explains the need and solution to the user.</p>
 
+        {/* Error Box (Red) */}
         {errorMsg && (
           <p className="text-red-400 text-sm mb-4 bg-red-950/30 p-3 rounded-md border border-red-900/50">
             {errorMsg}
+          </p>
+        )}
+
+        {/* Success Box (Emerald Green) */}
+        {successMsg && (
+          <p className="text-emerald-400 text-sm mb-4 bg-emerald-950/30 p-3 rounded-md border border-emerald-900/50">
+            {successMsg}
           </p>
         )}
 
@@ -93,4 +102,4 @@ export default function Login() {
       </div>
     </div>
   );
-              }
+}
