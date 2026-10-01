@@ -6,7 +6,7 @@ export default function Navbar() {
       <div className="max-w-4xl mx-auto px-4 h-14 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <Link href="/" className="font-bold text-cyan-400 text-lg tracking-tight hover:text-cyan-300">
-            AnalysisArchive
+            se00q
           </Link>
           <Link href="/setup" className="text-xs text-gray-400 hover:text-cyan-400 transition-colors">
             Profile
@@ -17,7 +17,7 @@ export default function Navbar() {
           <input
             name="q"
             type="text"
-            placeholder="Search notes..."
+            placeholder="Search Analysis..."
             className="w-48 sm:w-64 bg-zinc-900 border border-zinc-800 rounded-full px-4 py-1.5 text-xs text-gray-200 focus:outline-none focus:border-cyan-500 transition-colors"
           />
         </form>
