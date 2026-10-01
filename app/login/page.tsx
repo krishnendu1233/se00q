@@ -33,7 +33,7 @@ export default function Login() {
         setErrorMsg(error.message);
       } else {
         // Route to the (main) folder's feed
-        router.push("/dashboard");
+        router.push("/setup");
         router.refresh();
       }
     }
