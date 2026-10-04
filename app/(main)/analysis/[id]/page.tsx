@@ -18,15 +18,15 @@ export default async function AnalysisView({
     .single();
 
   // TEMPORARY DEBUGGING: Show the error directly on the screen
-  if (error) {
-    return (
-      <div className="max-w-3xl mx-auto px-4 py-20 text-center">
-        <h2 className="text-red-400 font-bold text-xl mb-2">Database Error!</h2>
-        <p className="text-zinc-400">Code: {error.code}</p>
-        <p className="text-zinc-400">Message: {error.message}</p>
-      </div>
-    );
-  }
+ // if (error) {
+ //   return (
+ //     <div className="max-w-3xl mx-auto px-4 py-20 text-center">
+ //       <h2 className="text-red-400 font-bold text-xl mb-2">Database Error!</h2>
+ //       <p className="text-zinc-400">Code: {error.code}</p>
+ //       <p className="text-zinc-400">Message: {error.message}</p>
+ //     </div>
+ //   );
+ // }
 
   if (!post) {
     notFound(); 
