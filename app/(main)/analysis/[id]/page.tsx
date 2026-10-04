@@ -2,7 +2,6 @@ import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-// Next.js dynamic route params
 export default async function AnalysisView({
   params,
 }: {
@@ -15,8 +14,19 @@ export default async function AnalysisView({
     .eq("id", params.id)
     .single();
 
-  if (error || !post) {
-    notFound(); // Triggers the default Next.js 404 page if the ID doesn't exist
+  // TEMPORARY DEBUGGING: Show the error directly on the screen
+  if (error) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 py-20 text-center">
+        <h2 className="text-red-400 font-bold text-xl mb-2">Database Error!</h2>
+        <p className="text-zinc-400">Code: {error.code}</p>
+        <p className="text-zinc-400">Message: {error.message}</p>
+      </div>
+    );
+  }
+
+  if (!post) {
+    notFound(); 
   }
 
   const date = new Date(post.created_at).toLocaleDateString("en-US", {
@@ -27,9 +37,9 @@ export default async function AnalysisView({
 
   return (
     <article className="max-w-3xl mx-auto px-4 py-6">
-      {/* Back Navigation */}
+      {/* Updated Back Navigation to point to /feed */}
       <Link 
-        href="/" 
+        href="/feed" 
         className="inline-flex items-center text-sm text-zinc-400 hover:text-cyan-400 transition-colors mb-8"
       >
         <span className="mr-2">←</span> Back to feed
@@ -81,7 +91,7 @@ export default async function AnalysisView({
         </div>
       </header>
 
-      {/* Dynamic Metrics Section (Only renders fields that exist for this content type) */}
+      {/* Dynamic Metrics Section */}
       <section className="grid sm:grid-cols-2 gap-4 mb-8">
         {post.duration && (
           <div className="bg-zinc-950 p-4 rounded-lg border border-zinc-800">
@@ -127,4 +137,4 @@ export default async function AnalysisView({
       </section>
     </article>
   );
-      }
+}
