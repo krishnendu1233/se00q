@@ -10,7 +10,7 @@ export default function FeedItem({ post }: { post: AnalysisPost }) {
   });
 
   // Display title for long-form, otherwise fallback to topic
-  const displayTitle = post.title || post.hook_notes.substring(0, 60) || "Untitled Analysis";
+  const displayTitle = post.title || post.hook_notes?.substring(0, 60) || "Untitled Analysis";
 
   return (
     <div className="group border-b border-zinc-800/60 py-4 hover:bg-zinc-900/30 transition-colors px-2 sm:px-4 rounded">
