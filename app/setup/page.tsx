@@ -40,7 +40,7 @@ export default function SetupProfile() {
       alert("Error creating profile. Username might be taken.");
       setLoading(false);
     } else {
-      router.push("/");
+      router.push("/feed");
       router.refresh();
     }
   };
