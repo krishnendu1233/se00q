@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import AuthorActions from "@/components/AuthorActions";
 
 export default async function AnalysisView({
   params,
@@ -31,6 +32,18 @@ export default async function AnalysisView({
   if (!post) {
     notFound(); 
   }
+  // fetch the author's profile using the user_id from the post
+  const { data: author } = await supabase
+    .from("profiles")
+    .select("username, first_name, last_name")
+    .eq("id", post.user_id)
+    .single();
+
+  const date = new Date(post.created_at).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 
   const date = new Date(post.created_at).toLocaleDateString("en-US", {
     month: "long",
@@ -47,6 +60,31 @@ export default async function AnalysisView({
       >
         <span className="mr-2">←</span> Back to feed
       </Link>
+      {/* This will only show up if the current user is the author */}
+        <AuthorActions authorId={post.user_id} postId={post.id} />
+      </div>
+
+      <header className="mb-8">
+        <div className="flex flex-wrap items-center gap-3 mb-3">
+          <span className="px-2.5 py-1 rounded-sm text-xs font-bold bg-cyan-900/40 text-cyan-400 uppercase tracking-wider border border-cyan-800/50">
+            {post.platform}
+          </span>
+          <span className="px-2.5 py-1 rounded-sm text-xs bg-zinc-800 text-zinc-300 uppercase tracking-wider border border-zinc-700">
+            {post.content_type.replace("_", " ")}
+          </span>
+          <span className="text-sm text-zinc-500 ml-auto">{date}</span>
+        </div>
+
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-100 mb-2">
+          {post.title || post.topic}
+        </h1>
+        
+        {/* NEW: Display the Author */}
+        {author && (
+          <p className="text-sm text-zinc-400 mb-6">
+            Analyzed by <span className="text-cyan-400 font-medium">{author.first_name} {author.last_name}</span> <span className="font-mono text-xs opacity-70">({author.username})</span>
+          </p>
+        )}
 
       {/* Header Section */}
       <header className="mb-8">
