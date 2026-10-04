@@ -41,7 +41,7 @@ export default function SubmitForm() {
     }]);
 
     if (!error) {
-      router.push("/");
+      router.push("/feed");
       router.refresh(); // Refresh the main feed to show the new post
     } else {
       console.error(error);
