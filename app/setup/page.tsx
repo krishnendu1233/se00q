@@ -33,7 +33,7 @@ export default function SetupProfile() {
 
       // 3. If a username exists, they are already set up. Send them home.
       if (profile && profile.username) {
-        router.push("/"); 
+        router.push("/feed"); 
       }
     };
 
