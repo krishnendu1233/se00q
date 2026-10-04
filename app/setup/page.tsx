@@ -13,12 +13,31 @@ export default function SetupProfile() {
 
   // Fetch the logged-in user's ID when the page loads
   useEffect(() => {
-    const getUser = async () => {
+    const checkUserAndProfile = async () => {
+      // 1. Get the authenticated user
       const { data: { user } } = await supabase.auth.getUser();
-      if (user) setUserId(user.id);
-      else router.push("/login"); // Kick back to login if not authenticated
+      
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+      
+      setUserId(user.id);
+
+      // 2. Check if this user already has a saved username in the database
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("username")
+        .eq("id", user.id)
+        .single();
+
+      // 3. If a username exists, they are already set up. Send them home.
+      if (profile && profile.username) {
+        router.push("/"); 
+      }
     };
-    getUser();
+
+    checkUserAndProfile();
   }, [router]);
 
   const handleProfileCreate = async (e: React.FormEvent) => {
