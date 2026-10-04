@@ -1,60 +1,50 @@
 import { supabase } from "@/lib/supabase";
-import FeedItem from "@/components/FeedItem";
-import { AnalysisPost } from "@/types";
+import FeedItem from "@/components/FeedItem"; // Adjust import path if needed
 
-export const revalidate = 0; // Ensures the feed is always fresh
-
-export default async function Home({
+export default async function FeedPage({
   searchParams,
 }: {
-  searchParams: { q?: string };
+  searchParams: Promise<{ [key: string]: string | undefined }>;
 }) {
-  const query = searchParams.q || "";
-  let posts: AnalysisPost[] = [];
-  let errorMsg = null;
+  const resolvedSearchParams = await searchParams;
+  const searchQuery = resolvedSearchParams.q;
 
-  try {
-    if (query.trim()) {
-      // Use the RPC function for full-text search
-      const { data, error } = await supabase.rpc("search_analyses", { query });
-      if (error) throw error;
-      posts = data || [];
-    } else {
-      // Default: fetch all posts in reverse chronological order
-      const { data, error } = await supabase
-        .from("analyses")
-        .select("*")
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      posts = data || [];
-    }
-  } catch (error) {
-    console.error("Error fetching posts:", error);
-    errorMsg = "Failed to load the feed. Please try again later.";
+  // 1. Start the base query
+  let query = supabase
+    .from("analyses")
+    .select("*")
+    .order("created_at", { ascending: false });
+
+  // 2. If there is a search term, filter the results
+  if (searchQuery) {
+    // This searches the title, topic, and creator username for the search term (case-insensitive)
+    query = query.or(`title.ilike.%${searchQuery}%,topic.ilike.%${searchQuery}%,actual_creator_username.ilike.%${searchQuery}%`);
   }
 
+  const { data: posts, error } = await query;
+
   return (
-    <div className="max-w-4xl mx-auto px-4">
-      {/* Search Header for context when a user searches */}
-      {query && (
-        <div className="mb-6 pb-4 border-b border-zinc-800">
-          <h2 className="text-sm text-gray-400">
-            Search results for <span className="text-cyan-400 font-semibold">"{query}"</span>
+    <div className="max-w-3xl mx-auto px-4 py-8">
+      
+      {searchQuery && (
+        <div className="mb-6 flex items-center justify-between">
+          <h2 className="text-sm text-zinc-400">
+            Search results for <span className="text-cyan-400 font-semibold">"{searchQuery}"</span>
           </h2>
+          <a href="/feed" className="text-xs text-zinc-500 hover:text-white underline">
+            Clear Search
+          </a>
         </div>
       )}
 
-      {/* Feed Container */}
-      <div className="flex flex-col">
-        {errorMsg ? (
-          <p className="text-red-400 text-sm py-8 text-center">{errorMsg}</p>
-        ) : posts.length > 0 ? (
+      <div className="space-y-2">
+        {posts && posts.length > 0 ? (
           posts.map((post) => (
             <FeedItem key={post.id} post={post} />
           ))
         ) : (
-          <div className="py-12 text-center text-zinc-500 text-sm">
-            {query ? "No analyses found matching your search." : "No analyses posted yet. Be the first!"}
+          <div className="text-center py-20 text-zinc-500">
+            No analyses found.
           </div>
         )}
       </div>
