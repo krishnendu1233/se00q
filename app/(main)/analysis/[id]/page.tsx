@@ -5,13 +5,16 @@ import { notFound } from "next/navigation";
 export default async function AnalysisView({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>; // 1. Wrap in a Promise
 }) {
-  // Fetch the single analysis from Supabase
+  // 2. Await the params before using them
+  const resolvedParams = await params;
+  
+  // 3. Use the resolved ID in your query
   const { data: post, error } = await supabase
     .from("analyses")
     .select("*")
-    .eq("id", params.id)
+    .eq("id", resolvedParams.id)
     .single();
 
   // TEMPORARY DEBUGGING: Show the error directly on the screen
