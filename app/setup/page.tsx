@@ -8,15 +8,14 @@ export default function SetupProfile() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [platform, setPlatform] = useState("YouTube");
   const [userId, setUserId] = useState<string | null>(null);
 
-  // Fetch the logged-in user's ID when the page loads
   useEffect(() => {
     const checkUserAndProfile = async () => {
-      // 1. Get the authenticated user
       const { data: { user } } = await supabase.auth.getUser();
-      
       if (!user) {
         router.push("/login");
         return;
@@ -24,19 +23,16 @@ export default function SetupProfile() {
       
       setUserId(user.id);
 
-      // 2. Check if this user already has a saved username in the database
       const { data: profile } = await supabase
         .from("profiles")
         .select("username")
         .eq("id", user.id)
         .single();
 
-      // 3. If a username exists, they are already set up. Send them home.
       if (profile && profile.username) {
         router.push("/feed"); 
       }
     };
-
     checkUserAndProfile();
   }, [router]);
 
@@ -45,12 +41,13 @@ export default function SetupProfile() {
     if (!userId) return;
     setLoading(true);
 
-    // Enforce the @ symbol for usernames as per your wireframe
     const formattedUsername = username.startsWith("@") ? username : `@${username}`;
 
     const { error } = await supabase.from("profiles").upsert({
       id: userId,
       username: formattedUsername,
+      first_name: firstName,
+      last_name: lastName,
       primary_platform: platform,
     });
 
@@ -66,25 +63,46 @@ export default function SetupProfile() {
 
   return (
     <div className="max-w-md mx-auto mt-20 p-6 bg-zinc-950 border border-zinc-800 rounded-lg shadow-2xl">
-      <h1 className="text-2xl font-bold text-cyan-400 mb-6">Set up a profile</h1>
+      <h1 className="text-2xl font-bold text-cyan-400 mb-2">Set up a profile</h1>
       
-      <form onSubmit={handleProfileCreate} className="space-y-6">
+      {/* Notification Banner */}
+      <div className="bg-cyan-950/30 border border-cyan-900 text-cyan-200 p-3 rounded-md text-xs mb-6 leading-relaxed">
+        <strong>Important:</strong> Please add your names properly. This is the primary way people will recognize your analyses. Do not use random usernames like <span className="font-mono opacity-80">@unhappydonkey68</span>.
+      </div>
+      
+      <form onSubmit={handleProfileCreate} className="space-y-4">
         
-        {/* Optional Image Upload Placeholder */}
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-full bg-zinc-800 border-2 border-dashed border-zinc-600 flex items-center justify-center text-zinc-500 text-xs">
-            Image
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-xs text-gray-400 mb-1">First Name</label>
+            <input 
+              type="text" 
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+              placeholder="Jane"
+              className="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:border-cyan-500 outline-none"
+            />
           </div>
-          <span className="text-xs text-zinc-500">Profile Image (Optional)</span>
+          <div>
+            <label className="block text-xs text-gray-400 mb-1">Last Name</label>
+            <input 
+              type="text" 
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              placeholder="Doe (Opt)"
+              className="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:border-cyan-500 outline-none"
+            />
+          </div>
         </div>
 
         <div>
           <label className="block text-xs text-gray-400 mb-1">Username</label>
           <input 
             type="text" 
-            placeholder="@mrbbbcreator"
+            placeholder="@yourname"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value.replace(/\s+/g, ''))}
             required
             className="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:border-cyan-500 outline-none font-mono"
           />
@@ -97,10 +115,19 @@ export default function SetupProfile() {
             onChange={(e) => setPlatform(e.target.value)}
             className="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:border-cyan-500 outline-none"
           >
-            <option value="YT">YouTube (YT)</option>
-            <option value="IG">Instagram (ins)</option>
+            <option value="YouTube">YouTube</option>
+            <option value="Instagram">Instagram</option>
             <option value="X">X (Twitter)</option>
-            <option value="IN">LinkedIn (in)</option>
+            <option value="LinkedIn">LinkedIn</option>
+            <option value="TikTok">TikTok</option>
+            <option value="Facebook">Facebook</option>
+            <option value="Snapchat">Snapchat</option>
+            <option value="Pinterest">Pinterest</option>
+            <option value="Reddit">Reddit</option>
+            <option value="Threads">Threads</option>
+            <option value="Discord">Discord</option>
+            <option value="Twitch">Twitch</option>
+            
           </select>
         </div>
 
@@ -114,4 +141,4 @@ export default function SetupProfile() {
       </form>
     </div>
   );
-}
+          }
