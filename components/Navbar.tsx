@@ -13,7 +13,7 @@ export default function Navbar() {
           </Link>
         </div>
 
-        <form method="GET" action="/" className="relative">
+        <form method="GET" action="/feed" className="relative">
           <input
             name="q"
             type="text"
