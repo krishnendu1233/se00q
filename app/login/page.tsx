@@ -17,17 +17,31 @@ export default function Login() {
     setLoading(true);
     setErrorMsg("");
 
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data: authData, error } = await supabase.auth.signInWithPassword({ email, password });
     
     if (error) {
       setErrorMsg(error.message);
       setLoading(false);
-    } else {
-      // Redirects to setup page after successful login
-      router.push("/setup");
-      router.refresh();
+      return;
     }
+
+    // Check if the user has a profile set up
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("username")
+      .eq("id", authData.user.id)
+      .single();
+
+    // Route dynamically based on profile existence
+    if (profile && profile.username) {
+      router.push("/"); // Returning user goes to the feed
+    } else {
+      router.push("/setup"); // New user goes to setup
+    }
+    
+    router.refresh();
   };
+  
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
