@@ -6,33 +6,22 @@ import AuthorActions from "@/components/AuthorActions";
 export default async function AnalysisView({
   params,
 }: {
-  params: Promise<{ id: string }>; // 1. Wrap in a Promise
+  params: Promise<{ id: string }>;
 }) {
-  // 2. Await the params before using them
   const resolvedParams = await params;
   
-  // 3. Use the resolved ID in your query
+  // 1. Fetch the analysis post
   const { data: post, error } = await supabase
     .from("analyses")
     .select("*")
     .eq("id", resolvedParams.id)
     .single();
 
-  // TEMPORARY DEBUGGING: Show the error directly on the screen
- // if (error) {
- //   return (
- //     <div className="max-w-3xl mx-auto px-4 py-20 text-center">
- //       <h2 className="text-red-400 font-bold text-xl mb-2">Database Error!</h2>
- //       <p className="text-zinc-400">Code: {error.code}</p>
- //       <p className="text-zinc-400">Message: {error.message}</p>
- //     </div>
- //   );
- // }
-
-  if (!post) {
+  if (error || !post) {
     notFound(); 
   }
-  // fetch the author's profile using the user_id from the post
+
+  // 2. Fetch the author's profile using the user_id from the post
   const { data: author } = await supabase
     .from("profiles")
     .select("username, first_name, last_name")
@@ -44,20 +33,24 @@ export default async function AnalysisView({
     day: "numeric",
     year: "numeric",
   });
- 
+
   return (
     <article className="max-w-3xl mx-auto px-4 py-6">
-      {/* Updated Back Navigation to point to /feed */}
-      <Link 
-        href="/feed" 
-        className="inline-flex items-center text-sm text-zinc-400 hover:text-cyan-400 transition-colors mb-8"
-      >
-        <span className="mr-2">←</span> Back to feed
-      </Link>
-      {/* This will only show up if the current user is the author */}
+      
+      {/* Top Bar: Back Button & Author Actions (Edit) */}
+      <div className="flex items-center justify-between mb-8">
+        <Link 
+          href="/feed" 
+          className="inline-flex items-center text-sm text-zinc-400 hover:text-cyan-400 transition-colors"
+        >
+          <span className="mr-2">←</span> Back to feed
+        </Link>
+
+        {/* This will only show up if the current user is the author */}
         <AuthorActions authorId={post.user_id} postId={post.id} />
       </div>
 
+      {/* Header Section */}
       <header className="mb-8">
         <div className="flex flex-wrap items-center gap-3 mb-3">
           <span className="px-2.5 py-1 rounded-sm text-xs font-bold bg-cyan-900/40 text-cyan-400 uppercase tracking-wider border border-cyan-800/50">
@@ -73,28 +66,12 @@ export default async function AnalysisView({
           {post.title || post.topic}
         </h1>
         
-        {/* NEW: Display the Author */}
+        {/* Author Display */}
         {author && (
           <p className="text-sm text-zinc-400 mb-6">
             Analyzed by <span className="text-cyan-400 font-medium">{author.first_name} {author.last_name}</span> <span className="font-mono text-xs opacity-70">({author.username})</span>
           </p>
         )}
-
-      {/* Header Section */}
-      <header className="mb-8">
-        <div className="flex flex-wrap items-center gap-3 mb-3">
-          <span className="px-2.5 py-1 rounded-sm text-xs font-bold bg-cyan-900/40 text-cyan-400 uppercase tracking-wider border border-cyan-800/50">
-            {post.platform}
-          </span>
-          <span className="px-2.5 py-1 rounded-sm text-xs bg-zinc-800 text-zinc-300 uppercase tracking-wider border border-zinc-700">
-            {post.content_type.replace("_", " ")}
-          </span>
-          <span className="text-sm text-zinc-500 ml-auto">{date}</span>
-        </div>
-
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-100 mb-4">
-          {post.title || post.topic}
-        </h1>
 
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-zinc-400 bg-zinc-900/50 p-4 rounded-lg border border-zinc-800/60">
           <div>
