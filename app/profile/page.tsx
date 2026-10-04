@@ -91,6 +91,15 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8 space-y-10">
+      {/* Back Button */}
+      <div>
+        <Link 
+          href="/feed" 
+          className="inline-flex items-center gap-2 text-sm text-zinc-400 hover:text-cyan-400 transition-colors"
+        >
+          <span>←</span> Back to Feed
+        </Link>
+      </div>
       
       {/* 1. Profile Details Form */}
       <section className="bg-zinc-950 border border-zinc-800 p-6 rounded-lg shadow-xl">
