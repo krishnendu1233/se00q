@@ -16,8 +16,7 @@ export default function ProfilePage() {
   const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState("");
-  
+    
   // Posts Data
   const [posts, setPosts] = useState<any[]>([]);
 
@@ -43,8 +42,7 @@ export default function ProfilePage() {
         setUsername(profile.username || "");
         setFirstName(profile.first_name || "");
         setLastName(profile.last_name || "");
-        setAvatarUrl(profile.avatar_url || "");
-      }
+             }
 
       // Fetch User's Posts
       const { data: userPosts } = await supabase
@@ -98,21 +96,7 @@ export default function ProfilePage() {
       <section className="bg-zinc-950 border border-zinc-800 p-6 rounded-lg shadow-xl">
         <h2 className="text-lg font-bold text-cyan-400 mb-6">Public Profile</h2>
         
-        <form onSubmit={handleUpdateProfile} className="space-y-6">
-          {/* Avatar (Placeholder for UI - requires Supabase Storage for actual uploads) */}
-          <div className="flex items-center gap-4">
-            <div className="w-20 h-20 rounded-full bg-zinc-800 border-2 border-zinc-700 flex items-center justify-center overflow-hidden">
-              {avatarUrl ? (
-                <img src={avatarUrl} alt="Avatar" className="w-full h-full object-cover" />
-              ) : (
-                <span className="text-zinc-500 text-xs">No Image</span>
-              )}
-            </div>
-            <button type="button" className="text-xs text-cyan-500 hover:text-cyan-400">
-              Change Image
-            </button>
-          </div>
-
+        <form onSubmit={handleUpdateProfile} className="space-y-6">          
           <div>
             <label className="block text-xs text-gray-400 mb-1">Username</label>
             <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} required className="w-full bg-zinc-900 border border-zinc-700 rounded p-2 text-sm focus:border-cyan-500 outline-none" />
