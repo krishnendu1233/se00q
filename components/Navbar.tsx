@@ -8,7 +8,7 @@ export default function Navbar() {
           <Link href="/" className="font-bold text-cyan-400 text-lg tracking-tight hover:text-cyan-300">
             se00q
           </Link>
-          <Link href="/setup" className="text-xs text-gray-400 hover:text-cyan-400 transition-colors">
+          <Link href="/profile" className="text-xs text-gray-400 hover:text-cyan-400 transition-colors">
             Profile
           </Link>
         </div>
