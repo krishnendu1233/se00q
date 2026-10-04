@@ -34,7 +34,7 @@ export default function Login() {
 
     // Route dynamically based on profile existence
     if (profile && profile.username) {
-      router.push("/"); // Returning user goes to the feed
+      router.push("/feed"); // Returning user goes to the feed
     } else {
       router.push("/setup"); // New user goes to setup
     }
