@@ -44,13 +44,7 @@ export default async function AnalysisView({
     day: "numeric",
     year: "numeric",
   });
-
-  const date = new Date(post.created_at).toLocaleDateString("en-US", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-
+ 
   return (
     <article className="max-w-3xl mx-auto px-4 py-6">
       {/* Updated Back Navigation to point to /feed */}
