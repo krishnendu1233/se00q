@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase/server'; // Adjust to your actual Supabase server setup path
+import { createClient } from '@supabase'; // Adjust to your actual Supabase server setup path
 import DashboardClient from './DashboardClient';
 
 export default async function DashboardPage() {
