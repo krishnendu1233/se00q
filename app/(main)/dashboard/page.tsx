@@ -1,15 +1,24 @@
-import { supabase } from '@/lib/supabase'; // Adjust to your actual Supabase server setup path
+import { redirect } from 'next/navigation';
+import { supabase } from '@/lib/supabase'; 
 import DashboardClient from './DashboardClient';
 
 export default async function DashboardPage() {
-  const supabase = createClient();
-  
-  // Fetch user data server-side
+  // 1. Authenticate the user
   const { data: { user } } = await supabase.auth.getUser();
   
-  // Extract first name or fallback to "Creator"
-  const fullName = user?.user_metadata?.full_name || user?.user_metadata?.name || "";
-  const userName = fullName ? fullName.split(' ')[0] : "Creator";
+  if (!user) {
+    redirect('/login');
+  }
+  
+  // 2. Fetch the first name from your profiles table
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('first_name')
+    .eq('id', user.id)
+    .single();
+
+  // 3. Fallback to "Creator" if first_name is empty or missing
+  const userName = profile?.first_name || "Creator";
 
   return <DashboardClient userName={userName} />;
 }
