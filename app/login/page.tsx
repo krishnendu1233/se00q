@@ -12,36 +12,47 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setErrorMsg("");
+const handleLogin = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setLoading(true);
+  setErrorMsg("");
 
-    const { data: authData, error } = await supabase.auth.signInWithPassword({ email, password });
-    
-    if (error) {
-      setErrorMsg(error.message);
-      setLoading(false);
-      return;
-    }
-
-    // Check if the user has a profile set up
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("username")
-      .eq("id", authData.user.id)
-      .single();
-
-    // Route dynamically based on profile existence
-    if (profile && profile.username) {
-      router.push("/dashboard"); // Returning user goes to the dashboard 
-    } else {
-      router.push("/setup"); // New user goes to setup
-    }
-    
-    router.refresh();
-  };
+  const { data: authData, error } = await supabase.auth.signInWithPassword({ email, password });
   
+  if (error) {
+    setErrorMsg(error.message);
+    setLoading(false);
+    return;
+  }
+
+  // 1. Prevent crash if user object is missing
+  if (!authData.user) {
+    setErrorMsg("Login failed. Please check your credentials or verify your email.");
+    setLoading(false);
+    return;
+  }
+
+  // 2. Fetch profile safely (ignoring the 'no rows' error from .single())
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("username")
+    .eq("id", authData.user.id)
+    .single();
+
+  // 3. Refresh cache before navigation so server components can read the new cookie
+  router.refresh();
+
+  // 4. Route based on profile existence
+  if (profile?.username) {
+    window.location.href = '/dashboard'; 
+  } else {
+    router.push("/setup"); 
+  }
+  
+  // 5. Ensure the spinner stops
+  setLoading(false);
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
