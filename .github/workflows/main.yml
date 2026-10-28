@@ -4,7 +4,7 @@ on:
   workflow_dispatch: # Allows you to trigger this manually from the Actions tab
 
 permissions:
-  contents: write # Required for the bot to push the new files back to your repo
+  contents: write # Required  for the bot to push the new files back to your repo
 
 jobs:
   process-videos:
