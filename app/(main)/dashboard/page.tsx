@@ -1,6 +1,6 @@
 "use client";
 import React, { useRef } from "react";
-import { TOOLS, Tool } from "description/tools";
+import { TOOLS, Tool } from "@/description/tools";
 
 // Card Component with Hover-to-Play logic
 function HoverVideoCard({ tool }: { tool: Tool }) {
