@@ -1,33 +1,33 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  async rewrites() {
-    return [
+import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin();
+
+const nextConfig: NextConfig = {
+  /* config options here */
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ["@svgr/webpack"],
+    });
+    return config;
+  },
+  images: {
+    localPatterns: [
       {
-        source: '/aligner/:path*',
-        destination: 'https://aligner-for-creators.vercel.app/:path*',
+        pathname: "/**",
       },
-      {
-        source: '/youtube-filterer/:path*',
-        destination: 'https://youtube-format-filterer.vercel.app/:path*',
+    ],
+  },
+  turbopack: {
+    root: __dirname,
+    rules: {
+      "*.svg": {
+        loaders: ["@svgr/webpack"],
+        as: "*.js",
       },
-      {
-        source: '/b-rolls/:path*',
-        destination: 'https://b-rolls-suggestor.vercel.app/:path*',
-      },
-      {
-        source: '/z03-predictor/:path*',
-        destination: 'https://z03-outlier-predictor.vercel.app/:path*',
-      },
-      {
-        source: '/elevenlabs-alt/:path*',
-        destination: 'https://krudev-elevenlabs-alternative.hf.space/:path*',
-      },
-      {
-        source: '/saliency/:path*',
-        destination: 'https://krudev-saliency-retention-analyzer.hf.space/:path*',
-      }
-    ];
+    },
   },
 };
 
-module.exports = nextConfig;
+export default withNextIntl(nextConfig);
