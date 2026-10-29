@@ -1,3 +1,8 @@
+"use client";
+import React, { useRef, useState } from "react";
+import { Tool } from "@/description/tools";
+
+
 export default function HoverVideoCard({ tool }: { tool: Tool }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isActive, setIsActive] = useState(false);
