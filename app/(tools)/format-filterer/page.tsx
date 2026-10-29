@@ -10,7 +10,7 @@ export default function FormatFiltererPage() {
     const response = await fetch('/api/proxy/filterer', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ channel }) // Adjust based on what your backend expects
+      body: JSON.stringify({ channel: channel }) // Adjust based on what your backend expects
     });
     
     const data = await response.json();
