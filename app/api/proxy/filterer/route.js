@@ -11,7 +11,7 @@ export async function POST(req) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.SECRET_WORKER_KEY, // The secret password
+        'x-api-key': process.env.SECRET_YFF_WORKER_API_KEY, // The secret password
       },
       body: JSON.stringify(userRequestData),
     });
