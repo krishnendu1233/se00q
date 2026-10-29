@@ -1,48 +1,63 @@
 "use client";
+
 import { useState } from "react";
+import SearchForm from "@/components/format-filterer/SearchForm";
+import Dashboard from "@/components/format-filterer/Dashboard";
+import Footer from "@/components/format-filterer/Footer";
 
 export default function FormatFiltererPage() {
   const [handle, setHandle] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [result, setResult] = useState(null);
 
-  const handleAnalyze = async () => {
-    // Notice this calls your local se00q API bridge, NOT filterer.vercel.app
-    const response = await fetch('/api/proxy/filterer', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ channel: handle }) // Adjust based on what your backend expects
-    });
-    
-    const data = await response.json();
-    setResult(data);
+  const handleAnalyze = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!handle.trim()) return;
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/proxy/filterer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ channel: handle }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "Analysis failed.");
+      setResult(data);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleReset = () => {
+    setResult(null);
+    setHandle("");
+    setError("");
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-10 font-mono">
-      <h1 className="text-3xl font-bold text-cyan-400 mb-4">Format Filterer</h1>
-      <p className="mb-6 text-gray-400">Enter a channel handle to extract winning formats.</p>
-      
-      <div className="flex gap-4 mb-6">
-        <input 
-          type="text" 
-          placeholder="e.g. MrBeast" 
-          value={handle}
-          onChange={(e) => setHandle(e.target.value)}
-          className="bg-gray-900 border border-gray-700 p-3 rounded text-white focus:border-cyan-400 outline-none"
-        />
-        <button 
-          onClick={handleAnalyze}
-          className="bg-yellow-400 text-black font-bold px-6 py-3 rounded hover:bg-yellow-500"
-        >
-          ANALYZE
-        </button>
-      </div>
-
-      {result && (
-        <div className="bg-gray-900 p-4 border border-gray-700 rounded">
-          <pre>{JSON.stringify(result, null, 2)}</pre>
-        </div>
-      )}
+    <div className="flex flex-col min-h-screen bg-black text-white font-mono">
+      <main className="max-w-5xl w-full mx-auto p-6 flex-1">
+        {!result ? (
+          <SearchForm 
+            handle={handle} 
+            setHandle={setHandle} 
+            onAnalyze={handleAnalyze} 
+            loading={loading} 
+            error={error} 
+          />
+        ) : (
+          <Dashboard 
+            result={result} 
+            onReset={handleReset} 
+          />
+        )}
+      </main>
+      <Footer />
     </div>
   );
-      }
+}
