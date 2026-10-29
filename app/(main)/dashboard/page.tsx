@@ -3,7 +3,9 @@ import React, { useRef, useState } from "react";
 import { TOOLS } from "@/description/tools";
 
 import HoverVideoCard from "@/components/dashboard/HoverVideoCard";
-
+// At the top of your dashboard page file:
+import CreditCircle from "@/components/general/CreditCircle";
+  
 export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-black text-gray-200 p-4 md:p-12 font-mono">
@@ -15,11 +17,8 @@ export default function DashboardPage() {
             <h1 className="text-2xl md:text-3xl font-bold text-white tracking-tight">Welcome back, Creator!</h1>
             <p className="text-sm text-zinc-500 mt-1">Select a tool to begin analysis.</p>
           </div>
-          
-          {/* এই ফাঁকা জায়গাটিতে পরে আপনার ক্রেডিট স্কোরের কম্পোনেন্ট বসাতে পারবেন */}
-          <div className="w-12 h-12 md:w-14 md:h-14 rounded-full border-2 border-dashed border-zinc-700 flex items-center justify-center shrink-0">
-            <span className="text-xs text-zinc-500 font-bold">Creds</span>
-          </div>
+          {/* just plugin credit circle */}
+          <CreditCircle credits={100} />
         </header>
 
         {/* মোবাইলের জন্য grid-cols-1 এবং ডেস্কটপের জন্য grid-cols-3 বা 4 করা হয়েছে */}
