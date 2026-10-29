@@ -2,25 +2,31 @@ import { NextResponse } from 'next/server';
 
 export async function POST(req) {
   try {
-    // 1. Get the data the user typed in the frontend
     const userRequestData = await req.json();
 
-    // 2. Secretly call your original filterer tool
-    // Replace the URL below with the exact API URL of your filterer backend
-    const workerResponse = await fetch('https://filterer.vercel.app/api/analyze', {
+    // 1. UPDATED URL: Changed to /api/py/analyze to match your Python backend
+    const workerResponse = await fetch('https://filterer.vercel.app/api/py/analyze', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.SECRET_YFF_WORKER_API_KEY, // The secret password
+        'x-api-key': process.env.SECRET_WORKER_KEY, 
       },
       body: JSON.stringify(userRequestData),
     });
 
-    const data = await workerResponse.json();
+    // 2. Check if the Python backend rejected the request (e.g., wrong API key)
+    if (!workerResponse.ok) {
+      const errorText = await workerResponse.text();
+      console.error("Worker responded with error:", workerResponse.status, errorText);
+      return NextResponse.json({ error: `Worker Error ${workerResponse.status}: ${errorText}` }, { status: workerResponse.status });
+    }
 
-    // 3. Send the result back to the se00q frontend
+    const data = await workerResponse.json();
     return NextResponse.json(data);
+    
   } catch (error) {
-    return NextResponse.json({ error: 'Bridge failed' }, { status: 500 });
+    // 3. Log the exact error to your Vercel console so we can see what went wrong
+    console.error("Bridge crash details:", error);
+    return NextResponse.json({ error: 'Bridge failed. Check Vercel logs for details.' }, { status: 500 });
   }
 }
