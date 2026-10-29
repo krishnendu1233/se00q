@@ -75,14 +75,14 @@ function HoverVideoCard({ tool }: { tool: Tool }) {
 export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-black text-gray-200 p-6 md:p-12 font-mono">
-      <div className="max-w-6xl mx-auto space-y-8">
+      <div className="max-w-4xl mx-auto space-y-8">
         
         <header className="pb-4">
           <h1 className="text-3xl font-bold text-white tracking-tight">Welcome back,Creator!</h1>
           <p className="text-sm text-zinc-500 mt-1">Select a tool to begin analysis.</p>
         </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[180px] grid-flow-dense">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 auto-rows-[120px] grid-flow-dense">
           <HoverVideoCard tool={TOOLS.find(t => t.id === "timeline")!} />
           <HoverVideoCard tool={TOOLS.find(t => t.id === "format-filterer")!} />
           <HoverVideoCard tool={TOOLS.find(t => t.id === "audio-spectrum")!} />
