@@ -21,15 +21,10 @@ function HoverVideoCard({ tool }: { tool: Tool }) {
     }
   };
 
-  // Convert hardcoded spans to responsive spans (e.g., 'col-span-2' becomes 'md:col-span-2')
-  // This ensures mobile stays balanced while preserving your layout on desktop.
-  const responsiveColSpan = tool.colSpan?.includes("md:") ? tool.colSpan : `md:${tool.colSpan}`;
-  const responsiveRowSpan = tool.rowSpan?.includes("md:") ? tool.rowSpan : `md:${tool.rowSpan}`;
-
   return (
     <div 
-      // Added min-h-0 and min-w-0 to prevent grid blowout, and default col/row spans for mobile
-      className={`relative overflow-hidden bg-zinc-950 border border-zinc-800 rounded-2xl md:rounded-3xl cursor-pointer select-none min-h-0 min-w-0 col-span-1 row-span-1 ${responsiveColSpan} ${responsiveRowSpan}`}
+      // colSpan/rowSpan বাদ দেওয়া হয়েছে এবং aspect-square যোগ করা হয়েছে ১:১ রেশিওর জন্য
+      className={`relative overflow-hidden bg-zinc-950 border border-zinc-800 rounded-2xl md:rounded-3xl cursor-pointer select-none aspect-square`}
       style={{ 
         WebkitTouchCallout: "none",
         WebkitUserSelect: "none" 
@@ -45,7 +40,8 @@ function HoverVideoCard({ tool }: { tool: Tool }) {
         src={tool.imagePath} 
         alt={tool.name} 
         draggable={false}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+        // object-cover এর বদলে object-contain ব্যবহার করা হয়েছে
+        className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-300 ${
           isActive ? "opacity-0" : "opacity-100"
         }`}
       />
@@ -57,11 +53,13 @@ function HoverVideoCard({ tool }: { tool: Tool }) {
         loop
         playsInline 
         draggable={false}
-        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+        // object-cover এর বদলে object-contain ব্যবহার করা হয়েছে
+        className={`absolute inset-0 w-full h-full object-contain transition-opacity duration-300 ${
           isActive ? "opacity-100" : "opacity-0"
         }`}
       />
 
+      {/* টেক্সটগুলো যাতে কন্টেইনের উপরে ভালোভাবে বসে তাই পজিশনিং ঠিক রাখা হয়েছে */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent p-4 md:p-6 flex flex-col justify-end pointer-events-none">
         <h3 className="text-lg md:text-xl font-bold text-white mb-1 drop-shadow-md">
           {tool.name}
@@ -86,8 +84,8 @@ export default function DashboardPage() {
           <p className="text-sm text-zinc-500 mt-1">Select a tool to begin analysis.</p>
         </header>
 
-        {/* Changed grid-cols-1 to grid-cols-2 for mobile to better accommodate the masonry feel, keeping it dense */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 auto-rows-[100px] md:auto-rows-[120px] grid-flow-dense">
+        {/* auto-rows বাদ দিয়ে শুধুমাত্র কলাম সংখ্যা নির্ধারণ করা হয়েছে */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
           {TOOLS.filter(t => ["timeline", "format-filterer", "audio-spectrum", "outlier-predictor", "saliency", "format-database", "aligner"].includes(t.id)).map(tool => (
             <HoverVideoCard key={tool.id} tool={tool} />
           ))}
