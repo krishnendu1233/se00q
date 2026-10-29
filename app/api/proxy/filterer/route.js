@@ -5,11 +5,11 @@ export async function POST(req) {
     const userRequestData = await req.json();
 
     // 1. UPDATED URL: Changed to /api/py/analyze to match your Python backend
-    const workerResponse = await fetch('https://filterer.vercel.app/api/py/analyze', {
+    const workerResponse = await fetch('https://youtube-format-filterer.vercel.app/api/py/analyze', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': process.env.SECRET_WORKER_KEY, 
+        'x-api-key': process.env.SECRET_YFF_WORKER_API_KEY, 
       },
       body: JSON.stringify(userRequestData),
     });
