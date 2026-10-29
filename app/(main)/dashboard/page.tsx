@@ -1,8 +1,8 @@
 "use client";
 import React, { useRef, useState } from "react";
-import { TOOLS, Tool } from "@/description/tools";
+import { TOOLS } from "@/description/tools";
 
-import HoverVideoCard from "@/components/HoverVideoCard/";
+import HoverVideoCard from "@/components/dashboard/HoverVideoCard";
 
 export default function DashboardPage() {
   return (
