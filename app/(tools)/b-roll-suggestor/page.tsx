@@ -36,9 +36,14 @@ export default function BRollSuggester() {
       setFileName(uploadResult.file_name);
       setStatus("PROCESSING");
     } catch (err) {
-      setError(err.message);
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError("An unknown error occurred");
+      }
       setStatus("ERROR");
     }
+
   };
 
   useEffect(() => {
