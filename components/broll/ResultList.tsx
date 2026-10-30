@@ -1,5 +1,22 @@
+export interface MediaItem {
+  id: number;
+  preview: string;
+  download_url: string;
+}
+
+export interface QueryItem {
+  query: string;
+  images: MediaItem[];
+  videos: MediaItem[];
+}
+
+export interface SegmentResult {
+  timestamp: string;
+  queries: QueryItem[];
+}
+
 interface ResultListProps {
-  results: any[];
+  results: SegmentResult[];
 }
 
 export default function ResultList({ results }: ResultListProps) {
@@ -14,13 +31,13 @@ export default function ResultList({ results }: ResultListProps) {
           <div className="text-yellow-400 text-sm mb-4">Timestamp: {segment.timestamp}s</div>
           
           <div className="grid grid-cols-1 gap-6">
-            {segment.queries.map((q: any, qIdx: number) => (
+            {segment.queries.map((q, qIdx) => (
               <div key={qIdx} className="space-y-3">
                 <p className="text-gray-300 text-sm italic border-l-2 border-cyan-500 pl-3">
-                  "{q.query}"
+                  &ldquo;{q.query}&rdquo;
                 </p>
                 <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-gray-700">
-                  {q.videos.map((vid: any, vIdx: number) => (
+                  {q.videos.map((vid, vIdx) => (
                     <div key={vIdx} className="relative group shrink-0">
                       <img 
                         src={vid.preview} 
