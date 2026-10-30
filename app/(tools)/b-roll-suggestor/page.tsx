@@ -95,23 +95,37 @@ export default function BRollSuggesterPage() {
       const uniqueFileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
       setSupabasePath(uniqueFileName);
       
-      // Upload to Supabase with XHR for progress tracking
+      // Upload to Supabase with XHR for accurate progress tracking
       await new Promise<void>((resolve, reject) => {
         const xhr = new XMLHttpRequest();
-        const url = `${supabaseUrl}/storage/v1/object/videos/${uniqueFileName}`;
+        
+        // Fix 1: Strip any trailing slashes from the environment variable
+        const cleanSupabaseUrl = supabaseUrl.replace(/\/$/, '');
+        const url = `${cleanSupabaseUrl}/storage/v1/object/videos/${uniqueFileName}`;
         
         xhr.open("POST", url, true);
+        
+        // Fix 2: Provide all exact headers the Supabase API expects
         xhr.setRequestHeader("Authorization", `Bearer ${supabaseAnonKey}`);
         xhr.setRequestHeader("apikey", supabaseAnonKey);
-        xhr.setRequestHeader("Content-Type", file.type);
+        xhr.setRequestHeader("Content-Type", file.type || "application/octet-stream");
+        xhr.setRequestHeader("x-upsert", "false");
+        xhr.setRequestHeader("cache-control", "3600");
         
         xhr.upload.onprogress = (e) => {
-          if (e.lengthComputable) setUploadProgress(Math.round((e.loaded / e.total) * 100));
+          if (e.lengthComputable) {
+            setUploadProgress(Math.round((e.loaded / e.total) * 100));
+          }
         };
 
         xhr.onload = () => {
-          if (xhr.status >= 200 && xhr.status < 300) resolve();
-          else reject(new Error(`Upload failed: ${xhr.status}`));
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve();
+          } else {
+            // Log the actual error response from Supabase for debugging
+            console.error("Supabase Error Response:", xhr.responseText);
+            reject(new Error(`Upload failed with status: ${xhr.status}`));
+          }
         };
         
         xhr.onerror = () => reject(new Error("Network error during upload."));
@@ -139,6 +153,7 @@ export default function BRollSuggesterPage() {
       setStatus("ERROR");
     }
   };
+  
 
   // Poll Gemini Status
   useEffect(() => {
@@ -333,4 +348,5 @@ export default function BRollSuggesterPage() {
     </div>
   );
           }
-                  
+
+          
