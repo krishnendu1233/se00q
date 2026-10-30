@@ -7,7 +7,8 @@ export default function BRollSuggester() {
   const [status, setStatus] = useState("IDLE"); // IDLE, UPLOADING, PROCESSING, GENERATING, DONE, ERROR
   const [fileName, setFileName] = useState(null);
   const [results, setResults] = useState([]);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
+
 
   const fileInputRef = useRef(null);
 
