@@ -8,11 +8,18 @@ interface InputCardProps {
   status: string;
   error: string | null;
   startProcess: () => void;
-  fileInputRef: RefObject<HTMLInputElement>;
+  fileInputRef: RefObject<HTMLInputElement | null>;
 }
 
 export default function InputCard({
-  videoUrl, setVideoUrl, timestamps, setTimestamps, status, error, startProcess, fileInputRef
+  videoUrl,
+  setVideoUrl,
+  timestamps,
+  setTimestamps,
+  status,
+  error,
+  startProcess,
+  fileInputRef
 }: InputCardProps) {
   return (
     <div className="bg-[#0a0a0a] border border-gray-800 rounded-lg p-6 space-y-6">
@@ -20,6 +27,7 @@ export default function InputCard({
         <label className="text-xs text-gray-400 uppercase tracking-wider">Select Video</label>
         <div className="flex items-center gap-3">
           <button 
+            type="button"
             onClick={() => fileInputRef.current?.click()}
             className="bg-green-500 hover:bg-green-400 text-black text-sm font-bold py-3 px-6 transition-colors"
           >
@@ -40,7 +48,7 @@ export default function InputCard({
         <label className="text-xs text-gray-400 uppercase tracking-wider">Timestamps (e.g. 3-7, 12-18)</label>
         <input 
           type="text" 
-          placeholder="e.g. 3-7, 12-20" 
+          placeholder="3-7, 12-20" 
           value={timestamps}
           onChange={(e) => setTimestamps(e.target.value)}
           className="w-full bg-[#111] border border-gray-700 text-white p-3 text-sm focus:outline-none focus:border-cyan-400 transition-colors"
@@ -54,6 +62,7 @@ export default function InputCard({
       )}
 
       <button 
+        type="button"
         onClick={startProcess}
         disabled={status !== "IDLE" && status !== "ERROR" && status !== "DONE"}
         className="w-full bg-yellow-400 hover:bg-yellow-300 text-black font-bold py-3 px-4 uppercase text-sm tracking-wide disabled:opacity-50 transition-colors"
@@ -64,4 +73,4 @@ export default function InputCard({
       </button>
     </div>
   );
-        }
+}
