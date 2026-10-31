@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "se00q | Content Analytics",
+  title: "se00q | Creators Tool Suite",
   description: "Democratizing content analytics through community breakdown.",
 };
 
