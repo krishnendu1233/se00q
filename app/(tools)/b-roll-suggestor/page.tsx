@@ -80,7 +80,7 @@ export default function Home() {
       const apiFormData = new FormData();
       apiFormData.append('video_url', publicVideoUrl);
 
-      const geminiUploadRes = await fetch('/app/api/proxy/broll/upload', {
+      const geminiUploadRes = await fetch('/api/proxy/broll/upload', {
         method: 'POST',
         body: apiFormData,
       });
@@ -93,7 +93,7 @@ export default function Home() {
       let isReady = false;
       while (!isReady) {
         await new Promise((resolve) => setTimeout(resolve, 3000));
-        const statusRes = await fetch(`/app/api/proxy/broll/status?file_name=${encodeURIComponent(fileName)}`);
+        const statusRes = await fetch(`/api/proxy/broll/status?file_name=${encodeURIComponent(fileName)}`);
         const statusResult = await statusRes.json();
         
         if (!statusRes.ok) throw new Error(statusResult.detail || 'Status check failed');
@@ -110,7 +110,7 @@ export default function Home() {
       genFormData.append('file_name', fileName);
       genFormData.append('timestamps', timestamps);
 
-      const genRes = await fetch('/app/api/proxy/broll/generate', {
+      const genRes = await fetch('/api/proxy/broll/generate', {
         method: 'POST',
         body: genFormData,
       });
