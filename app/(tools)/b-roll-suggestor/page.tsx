@@ -2,7 +2,7 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_BUCKET_PUBLIC_SUPABASE_URL!;
+const supabaseUrl = process.env.NEXT_BUCKET_PUBLIC_SUPABASE_URL!; {/* entirely different projects just to store files*/}
 const supabaseAnonKey = process.env.NEXT_BUCEKT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -80,7 +80,7 @@ export default function Home() {
       const apiFormData = new FormData();
       apiFormData.append('video_url', publicVideoUrl);
 
-      const geminiUploadRes = await fetch('/api/upload', {
+      const geminiUploadRes = await fetch('/app/api/proxy/broll/upload', {
         method: 'POST',
         body: apiFormData,
       });
@@ -93,7 +93,7 @@ export default function Home() {
       let isReady = false;
       while (!isReady) {
         await new Promise((resolve) => setTimeout(resolve, 3000));
-        const statusRes = await fetch(`/api/status?file_name=${encodeURIComponent(fileName)}`);
+        const statusRes = await fetch(`/app/api/proxy/broll/status?file_name=${encodeURIComponent(fileName)}`);
         const statusResult = await statusRes.json();
         
         if (!statusRes.ok) throw new Error(statusResult.detail || 'Status check failed');
@@ -110,7 +110,7 @@ export default function Home() {
       genFormData.append('file_name', fileName);
       genFormData.append('timestamps', timestamps);
 
-      const genRes = await fetch('/api/generate', {
+      const genRes = await fetch('/app/api/proxy/broll/generate', {
         method: 'POST',
         body: genFormData,
       });
@@ -303,17 +303,6 @@ export default function Home() {
             </div>
           </div>
         )}
-      </div>
-
-      <div className="fixed bottom-4 left-4 text-xs text-zinc-500 z-50">
-        Made by <a 
-          href="https://krishnendukundu.vercel.app" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="text-[#39ff14] font-bold hover:underline transition-opacity hover:opacity-80"
-        >
-          Krishnendu
-        </a>
       </div>
     </main>
   );
