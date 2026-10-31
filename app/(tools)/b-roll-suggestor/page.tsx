@@ -2,7 +2,7 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_BROLL_BUCKET_URL!; {/* entirely different projects just to store files*/}
+const supabaseUrl = process.env.NEXT_PUBLIC_BROLL_BUCKET_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_BROLL_BUCKET_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -307,78 +307,3 @@ export default function Home() {
     </main>
   );
 }
-          <button
-            onClick={startProcess}
-            disabled={isBusy}
-            className="w-full bg-[#39ff14] hover:bg-[#32e011] text-black rounded font-mono font-black py-3 px-4 uppercase text-sm tracking-wide disabled:opacity-50 disabled:hover:shadow-none transition-all shadow-[0_0_15px_rgba(57,255,20,0.4)] hover:shadow-[0_0_25px_rgba(57,255,20,0.6)]"
-          >
-            {isBusy ? "PROCESSING..." : "ANALYZE VIDEO"}
-          </button>
-        </div>
-
-
-        {status !== "IDLE" && (
-          <div className="p-6 bg-black/50 backdrop-blur rounded-lg border border-[#39ff14]/30">
-            <div className="flex justify-between items-end mb-3 font-mono">
-              <span className="text-sm font-bold text-[#39ff14]">{currentProgress.text}</span>
-              <span className="text-xs text-[#39ff14]/70">{currentProgress.percent}%</span>
-            </div>
-            <div className="w-full bg-black rounded-full h-3 overflow-hidden border border-[#39ff14]/30">
-              <div 
-                className="bg-[#39ff14] h-full transition-all duration-300 ease-out shadow-[0_0_10px_rgba(57,255,20,0.8)]" 
-                style={{ width: `${currentProgress.percent}%` }}
-              />
-            </div>
-          </div>
-        )}
-
-        {status === "DONE" && results.length > 0 && (
-          <div className="space-y-8 mt-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <h2 className="text-cyan-400 font-mono text-xl font-bold border-b border-cyan-400/30 pb-2 drop-shadow-[0_0_5px_rgba(34,211,238,0.4)]">
-              Analysis Results
-            </h2>
-            
-            {results.map((segment, idx) => (
-              <div key={idx} className="bg-black/50 backdrop-blur border border-[#39ff14]/30 p-6 rounded-lg">
-                <div className="text-[#39ff14] font-mono text-sm font-bold mb-4 bg-[#39ff14]/10 inline-block px-3 py-1 rounded border border-[#39ff14]/20">
-                  TIMESTAMP: {segment.timestamp}s
-                </div>
-                
-                <div className="grid grid-cols-1 gap-6">
-                  {segment.queries.map((q, qIdx) => (
-                    <div key={qIdx} className="space-y-3">
-                      <p className="text-cyan-100 text-sm font-mono italic border-l-2 border-cyan-400 pl-3">
-                        &ldquo;{q.query}&rdquo;
-                      </p>
-                      <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-thin scrollbar-thumb-[#39ff14]/30">
-                        {q.videos.map((vid, vIdx) => (
-                          <div key={vIdx} className="relative group shrink-0">
-                            <img 
-                              src={vid.preview} 
-                              alt="B-roll preview" 
-                              className="h-28 w-auto object-cover rounded border border-[#39ff14]/30 group-hover:border-[#39ff14] group-hover:shadow-[0_0_10px_rgba(57,255,20,0.3)] transition-all" 
-                            />
-                            <a 
-                              href={vid.download_url} 
-                              target="_blank" 
-                              rel="noreferrer"
-                              className="absolute inset-0 bg-black/80 opacity-0 group-hover:opacity-100 flex items-center justify-center text-xs font-mono font-bold text-[#39ff14] transition-opacity"
-                            >
-                              DOWNLOAD
-                            </a>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
-  );
-          }
-
-          
