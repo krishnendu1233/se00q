@@ -1,26 +1,31 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
 
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
-    const fileName = searchParams.get("file_name");
+    const fileName = searchParams.get('file_name');
 
     if (!fileName) {
-      return NextResponse.json({ error: "Missing file_name parameter" }, { status: 400 });
+      return NextResponse.json({ detail: 'Missing file_name parameter' }, { status: 400 });
     }
-    
-    const response = await fetch(`https://b-rolls-suggestor.vercel.app/api/status?file_name=${fileName}`, {
-      method: "GET",
-      headers: {
-        "X-Worker-Key": process.env.SECRET_BRS_WORKER_API_KEY,
-      },
-    });
+
+    const response = await fetch(
+      `${process.env.BRS_WORKER_BASE_URL}/api/status?file_name=${encodeURIComponent(fileName)}`,
+      {
+        method: 'GET',
+        headers: {
+          'x-worker-key': process.env.SECRET_BRS_WORKER_API_KEY,
+        },
+        cache: 'no-store', // Critical: prevents Next.js from caching the 'PROCESSING' state
+      }
+    );
 
     const data = await response.json();
-    if (!response.ok) return NextResponse.json({ error: data.detail }, { status: response.status });
-    
-    return NextResponse.json(data);
+    return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { detail: error.message || 'Worker status proxy failed' },
+      { status: 500 }
+    );
   }
 }
