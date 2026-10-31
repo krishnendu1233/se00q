@@ -311,7 +311,7 @@ ck={startProcess}
             disabled={isBusy}
             className="w-full bg-[#39ff14] hover:bg-[#32e011] text-black rounded font-mono font-black py-3 px-4 uppercase text-sm tracking-wide disabled:opacity-50 disabled:hover:shadow-none transition-all shadow-[0_0_15px_rgba(57,255,20,0.4)] hover:shadow-[0_0_25px_rgba(57,255,20,0.6)]"
           >
-            {isBusy ? `PROCESSING: ${status}...` : "ANALYZE VIDEO"}
+            {isBusy ? `PROCESSING: ${progress.text}...` : "ANALYZE VIDEO"}
           </button>
         </div>
 
