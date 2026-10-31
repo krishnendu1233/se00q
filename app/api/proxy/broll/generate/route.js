@@ -1,22 +1,26 @@
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
+
+// Optional: Increase Vercel function timeout if Gemini + Pexels takes > 10s
+export const maxDuration = 60;
 
 export async function POST(request) {
   try {
     const formData = await request.formData();
-    
-    const response = await fetch(`https://b-rolls-suggestor.vercel.app/api/generate`, {
-      method: "POST",
+
+    const response = await fetch(`${process.env.WORKER_BASE_URL}/api/generate`, {
+      method: 'POST',
       headers: {
-        "X-Worker-Key": process.env.SECRET_BRS_WORKER_API_KEY,
+        'x-worker-key': process.env.SECRET_BRS_WORKER_API_KEY,
       },
       body: formData,
     });
 
     const data = await response.json();
-    if (!response.ok) return NextResponse.json({ error: data.detail }, { status: response.status });
-    
-    return NextResponse.json(data);
+    return NextResponse.json(data, { status: response.status });
   } catch (error) {
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { detail: error.message || 'Worker generate proxy failed' },
+      { status: 500 }
+    );
   }
 }
