@@ -1,33 +1,76 @@
 @import "tailwindcss";
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+
+/* 1. Map CSS variables to Tailwind classes (Tailwind v4 syntax) */
+@theme {
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-glow: var(--accent-glow);
+  --color-accent-strong: var(--accent-glow-strong);
+  
+  --color-surface: var(--bg-surface);
+  --color-surface-hover: var(--bg-surface-hover);
+  --color-border-subtle: var(--border-subtle);
+}
 
 @layer base {
   :root {
-    /* Ensures the browser scrollbar and default styling respect dark mode */
     color-scheme: dark;
+
+    /* Theme Variables: Cyan & Dark */
+    --accent: #22d3ee; /* Cyan-400 */
+    --accent-hover: #06b6d4; /* Cyan-500 */
+    --accent-glow: rgba(34, 211, 238, 0.3);
+    --accent-glow-strong: rgba(34, 211, 238, 0.6);
+
+    /* Background & Structural Variables */
+    --bg-main: #000000;
+    --bg-surface: #18181b; /* Zinc-900 */
+    --bg-surface-hover: #27272a; /* Zinc-800 */
+    --border-subtle: #27272a;
   }
 
   body {
-    /* Deep black background matching your wireframe aesthetic */
-    @apply bg-black text-gray-200 font-mono antialiased selection:bg-cyan-900 selection:text-cyan-100;
+    /* Uses the variables above automatically */
+    @apply bg-main text-gray-200 font-mono antialiased;
   }
 
-  /* Customizing the default scrollbar to match the dark UI */
+  ::selection {
+    @apply bg-cyan-900 text-cyan-100;
+  }
+
+  /* Scrollbars */
   ::-webkit-scrollbar {
     width: 8px;
   }
-  
   ::-webkit-scrollbar-track {
-    @apply bg-zinc-950;
+    @apply bg-main;
   }
-  
   ::-webkit-scrollbar-thumb {
-    @apply bg-zinc-800 rounded-full;
+    @apply bg-border-subtle rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-surface-hover;
+  }
+}
+
+/* 2. Reusable UI Components */
+@layer components {
+  /* Forms & Inputs */
+  .input-field {
+    @apply w-full border border-border-subtle p-3 rounded-lg bg-[#09090b] text-white placeholder-zinc-700 focus:outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all;
   }
 
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-zinc-700;
+  /* Buttons */
+  .btn-primary {
+    @apply w-full bg-accent hover:bg-accent-hover text-black font-black text-lg px-4 py-3 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-[0_0_15px_var(--accent-glow)] hover:shadow-[0_0_25px_var(--accent-strong)];
+  }
+  
+  .btn-outline {
+    @apply bg-surface hover:bg-surface-hover text-accent border border-accent/30 px-5 py-2 rounded-lg font-bold transition-all shadow-[0_0_10px_var(--accent-glow)];
+  }
+
+  /* Containers */
+  .card-surface {
+    @apply bg-surface/50 p-6 rounded-xl border border-border-subtle shadow-lg;
   }
 }
