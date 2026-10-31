@@ -18,14 +18,14 @@ export function useBrollAnalyzer() {
 
     try {
       // 1. Upload to Supabase
-      const { error: uploadErr } = await supabase.storage
+      const { error: uploadErr } = await supabaseBUCKET.storage
         .from('videos')
         .upload(uniqueFileName, file, { cacheControl: '3600', upsert: false });
 
       if (uploadErr) throw new Error(`Upload failed: ${uploadErr.message}`);
       uploadedToSupabase = true;
 
-      const { data: urlData } = supabase.storage.from('videos').getPublicUrl(uniqueFileName);
+      const { data: urlData } = supabaseBUCKET.storage.from('videos').getPublicUrl(uniqueFileName);
       
       // 2. Upload to Gemini
       setAppState('uploading-gemini');
@@ -68,7 +68,7 @@ export function useBrollAnalyzer() {
     } finally {
       // 5. Cleanup
       if (uploadedToSupabase) {
-        supabase.storage.from('videos').remove([uniqueFileName]);
+        supabaseBUCKET.storage.from('videos').remove([uniqueFileName]);
       }
     }
   };
