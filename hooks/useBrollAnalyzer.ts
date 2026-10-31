@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabaseBUCKET } from '@/lib/supabase';
 import { AppState, TimestampBlock } from '@/types/broll';
 
 export function useBrollAnalyzer() {
