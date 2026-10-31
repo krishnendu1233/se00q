@@ -7,7 +7,7 @@ export async function POST(request) {
   try {
     const formData = await request.formData();
 
-    const response = await fetch(`${process.env.WORKER_BASE_URL}/api/generate`, {
+    const response = await fetch(`${process.env.BRS_WORKER_BASE_URL}/api/generate`, {
       method: 'POST',
       headers: {
         'x-worker-key': process.env.SECRET_BRS_WORKER_API_KEY,
