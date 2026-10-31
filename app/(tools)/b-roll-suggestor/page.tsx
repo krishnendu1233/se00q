@@ -2,8 +2,8 @@
 import { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_BUCKET_PUBLIC_SUPABASE_URL!; {/* entirely different projects just to store files*/}
-const supabaseAnonKey = process.env.NEXT_BUCEKT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabaseUrl = process.env.NEXT_PUBLIC_BROLL_BUCKET_URL!; {/* entirely different projects just to store files*/}
+const supabaseAnonKey = process.env.NEXT_PUBLIC_BROLL_BUCKET_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 interface MediaItem {
